@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <title>Chaos Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Mono:wght@300&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: "Red Hat Mono", "Helvetica";
+      }
+      .center {
+        text-align: center;
+      }
+      .width-100 {
+        width: 100%;
+      }
+      button {
+        cursor: pointer;
+        background-color: red;
+        color: white;
+        padding: 50px 85px 45px;
+        border: 0;
+        border-radius: 4px;
+        font-size: 24px;
+        letter-spacing: 10px;
+        margin: 30px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="center width-100">Who's it gonna be?</h1>
+    <div class="width-100 center">
+      <button id="chaos-button">CHAOS</button>
+      <h3 id="result"></h3>
+    </div>
+  </body>
+  <script type="text/javascript">
+    const button = document.getElementById("chaos-button");
+    const options = [
+      "Alex",
+      "Ben",
+      "Beth",
+      "Dakota",
+      "Dan",
+      "Jeff",
+      "Justin",
+      "Kobie"
+    ];
+
+    let hornCount = 1;
+    const playAirhorn = () => {
+      const horn = document.getElementById(`airhorn${hornCount % 5}`);
+      horn.play();
+      hornCount++;
+    };
+
+    const chooseSomeone = () => {
+      const idx = Math.floor(Math.random() * options.length)
+      const person = options[idx];
+      document.getElementById("result").innerHTML = person;
+    };
+
+    button.addEventListener("click", () => {
+      playAirhorn();
+      chooseSomeone();
+    });
+  </script>
+
+  <!-- Need multiple horns so they can overlap, what's the point of the airhorn if you can't mash it? -->
+  <audio id="airhorn0" src="https://www.instantrapairhorn.com/wp-content/uploads/2014/03/instantrapairhorn.mp3"></audio>
+  
+  <!-- Preload only this one cuz it's first -->
+  <audio id="airhorn1" preload="auto" src="https://www.instantrapairhorn.com/wp-content/uploads/2014/03/instantrapairhorn.mp3"></audio>
+
+  <audio id="airhorn2" src="https://www.instantrapairhorn.com/wp-content/uploads/2014/03/instantrapairhorn.mp3"></audio>
+  <audio id="airhorn3" src="https://www.instantrapairhorn.com/wp-content/uploads/2014/03/instantrapairhorn.mp3"></audio>
+  <audio id="airhorn4" src="https://www.instantrapairhorn.com/wp-content/uploads/2014/03/instantrapairhorn.mp3"></audio>
+</html>
