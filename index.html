@@ -8,6 +8,8 @@
     <style>
       body {
         font-family: "Red Hat Mono", "Helvetica";
+        padding: 3%;
+        position: relative;
       }
       .center {
         text-align: center;
@@ -26,27 +28,54 @@
         letter-spacing: 10px;
         margin: 30px 0;
       }
+      .person {
+        cursor: pointer;
+      }
+      .margin-0 {
+        margin: 0;
+      }
+      .people {
+        display: inline-block;
+        text-transform: capitalize;
+      }
+      .hidden {
+        visibility: hidden;
+      }
     </style>
   </head>
   <body>
-    <h1 class="center width-100">Who's it gonna be?</h1>
     <div class="width-100 center">
+      <h1 class="center width-100">Who's it gonna be?</h1>
       <button id="chaos-button">CHAOS</button>
-      <h3 id="result"></h3>
+      <h3 class="hidden" id="result">test</h1>
+    </div>
+    <div class="width-100 list-container">
+      <input
+        id="add-person"
+        placeholder="Add someone"
+        type="text"
+      ></input>
+      <br/>
+      <ul class="people">
+      </ul>
     </div>
   </body>
   <script type="text/javascript">
-    const button = document.getElementById("chaos-button");
-    const options = [
-      "Alex",
-      "Ben",
-      "Beth",
-      "Dakota",
-      "Dan",
-      "Jeff",
-      "Justin",
-      "Kobie"
+    const defaultOptions = [
+      "alex",
+      "ben",
+      "beth",
+      "dakota",
+      "dan",
+      "jeff",
+      "justin",
+      "kobie",
     ];
+
+    const getOptions = () => {
+      const people = document.querySelectorAll(".person");
+      return Array.prototype.map.call(people, (p) => p.textContent.toLowerCase());
+    }
 
     let hornCount = 1;
     const playAirhorn = () => {
@@ -56,15 +85,55 @@
     };
 
     const chooseSomeone = () => {
+      const options = getOptions();
       const idx = Math.floor(Math.random() * options.length)
       const person = options[idx];
-      document.getElementById("result").innerHTML = person;
+      const resultElement = document.getElementById("result");
+      resultElement.innerHTML = `${person[0].toUpperCase()}${person.slice(1)}`;
+      resultElement.className = "";
     };
 
+    const input = document.getElementById("add-person");
+
+    input.addEventListener("keypress", (e) => {
+      if (e.key != "Enter") return;
+
+      const val = e.target.value.toLowerCase();
+      let currentOptions = getOptions();
+      if (currentOptions.includes(val)) {
+        return;
+      }
+
+      addListElement(val);
+    });
+
+    const people = document.querySelector(".people");
+    people.addEventListener("click", (e) => {
+      const clickedName = e.target.textContent;
+      const newList = getOptions().filter(name => name !== clickedName);
+      renderList(newList);
+    });
+
+    const button = document.getElementById("chaos-button");
     button.addEventListener("click", () => {
       playAirhorn();
       chooseSomeone();
     });
+
+    const addListElement = (name) => {
+        const li = document.createElement("li");
+        li.textContent = name;
+        li.className = "person";
+        people.appendChild(li);
+    }
+
+    const renderList = (listOfNames) => {
+      people.innerHTML = "";
+      listOfNames.sort().forEach(addListElement);
+    };
+
+    document.addEventListener("DOMContentLoaded", () => renderList(defaultOptions));
+
   </script>
 
   <!-- Need multiple horns so they can overlap, what's the point of the airhorn if you can't mash it? -->
