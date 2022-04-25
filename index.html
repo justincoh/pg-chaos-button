@@ -87,9 +87,10 @@
     };
 
     const chooseSomeone = () => {
-      const options = getOptions();
-      const idx = Math.floor(Math.random() * options.length)
-      const person = options[idx];
+      // const options = getOptions();
+      // const idx = Math.floor(Math.random() * options.length)
+      // const person = options[idx];
+      const person = "ben";
       const resultElement = document.getElementById("result");
       resultElement.innerHTML = `${person[0].toUpperCase()}${person.slice(1)}`;
       const personItem = document.getElementById(person);
