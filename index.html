@@ -43,6 +43,9 @@
         display: inline-block;
         text-transform: capitalize;
       }
+      #result {
+        text-transform: capitalize;
+      }
     </style>
   </head>
   <body>
@@ -65,7 +68,8 @@
   <script type="text/javascript">
     const defaultOptions = [
       "alex",
-      "ben",
+      "ben g",
+      "ben p",
       "beth",
       "dakota",
       "dan",
@@ -90,9 +94,10 @@
       // const options = getOptions();
       // const idx = Math.floor(Math.random() * options.length)
       // const person = options[idx];
-      const person = "ben";
+      const person = "ben p";
       const resultElement = document.getElementById("result");
-      resultElement.innerHTML = `${person[0].toUpperCase()}${person.slice(1)}`;
+      // resultElement.innerHTML = `${person[0].toUpperCase()}${person.slice(1)}`;
+      resultElement.innerHTML = person;
       const personItem = document.getElementById(person);
       personItem.style.fontSize = 24;
     };
