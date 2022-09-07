@@ -17,6 +17,9 @@
       .width-100 {
         width: 100%;
       }
+      .pad {
+        padding: 0 20px
+      }
       button {
         cursor: pointer;
         background-color: red;
@@ -39,6 +42,9 @@
         opacity: .6;
         text-decoration: line-through;
       }
+      .capitalize {
+        text-transform: capitalize;
+      }
       .people {
         display: inline-block;
         text-transform: capitalize;
@@ -46,13 +52,22 @@
       #result {
         text-transform: capitalize;
       }
+      .hidden {
+        visibility: hidden;
+      }
+      .leaderboard-container {
+        margin-top: 15px;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+      }
     </style>
   </head>
   <body>
     <div class="width-100 center">
       <h1 class="center width-100">Who's it gonna be?</h1>
       <button id="chaos-button">CHAOS</button>
-      <h3 id="result"></h1>
+      <h3 class="hidden" id="result">hidden content</h1>
     </div>
     <div class="list-container">
       <input
@@ -64,11 +79,16 @@
       <ul class="people">
       </ul>
     </div>
+    <div class="leaderboard-container width-100 center">
+      <h3 class="width-100">Leaderboard</h3>
+      <table id="leaderboard">
+      </table>
+    </div>
   </body>
   <script type="text/javascript">
     const defaultOptions = [
       "alex",
-      "ben g",
+      "ben",
       "beth",
       "dakota",
       "dan",
@@ -96,8 +116,10 @@
       const person = options[idx];
       const resultElement = document.getElementById("result");
       resultElement.innerHTML = person;
+      resultElement.className = ""; // remove .hidden
       const personItem = document.getElementById(person);
       personItem.style.fontSize = 24;
+      updateLeaderboard(person);
     };
 
     const input = document.getElementById("add-person");
@@ -141,8 +163,56 @@
       listOfNames.sort().forEach(addListElement);
     };
 
-    document.addEventListener("DOMContentLoaded", () => renderList(defaultOptions));
 
+    // Leaderboard stuff
+    const getLeaderboard = () => window.localStorage.getItem('leaderboard');
+    const setLeaderboard = (obj) => window.localStorage.setItem('leaderboard', JSON.stringify(obj));
+
+    const checkLeaderboard = () => {
+      const board = getLeaderboard();
+      if (board === null) {
+        setLeaderboard({});
+      }
+    };
+
+    const updateLeaderboard = (name) => {
+      const board = JSON.parse(getLeaderboard());
+      if (name in board) {
+        board[name] += 1;
+      } else {
+        board[name] = 1;
+      }
+      setLeaderboard(board);
+      renderLeaderboard()
+    };
+
+    const addLeaderboardRow = (name, value) => {
+      const board = document.getElementById('leaderboard');
+      const row = document.createElement('tr');
+      const nameCell = document.createElement('td')
+      const valueCell = document.createElement('td')
+      nameCell.className = "capitalize pad";
+      nameCell.innerHTML = name;
+      valueCell.innerHTML = value;
+      row.appendChild(nameCell);
+      row.appendChild(valueCell);
+      board.appendChild(row);
+    };
+
+    const renderLeaderboard = () => {
+      const leaderboard = JSON.parse(getLeaderboard());
+      const table = document.getElementById("leaderboard")
+      table.innerHTML = "" // drop all table rows to prevent duplicate rendering
+
+      // then re-render the whole thing
+      Object.entries(leaderboard).forEach(([name, value]) => addLeaderboardRow(name, value))
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderList(defaultOptions);
+      checkLeaderboard();
+      renderLeaderboard();
+    });
   </script>
 
   <!-- Need multiple horns so they can overlap, what's the point of the airhorn if you can't mash it? -->
