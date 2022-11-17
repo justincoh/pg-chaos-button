@@ -20,7 +20,7 @@
       .pad {
         padding: 0 20px
       }
-      button {
+      #chaos-button {
         cursor: pointer;
         background-color: red;
         color: white;
@@ -61,6 +61,59 @@
         flex-flow: row wrap;
         justify-content: center;
       }
+
+      .announcement-buttons {
+        float: right;
+      }
+
+      #announcement {
+        width: 70%;
+        margin: auto;
+        border: 5px solid red;
+        font-size: 50px;
+      }
+
+      /* The Modal (background) */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+
+      /* Modal Content/Box */
+      .announcement-modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 40%; /* Could be more or less, depending on screen size */
+      }
+
+      /* The Close Button */
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      #add-announcement {
+        width: 100%;
+      }
     </style>
   </head>
   <body>
@@ -84,6 +137,26 @@
       <table id="leaderboard">
       </table>
     </div>
+    <!-- Trigger/Open The Modal -->
+    <button id="remove-announcement-button" class="announcement-buttons">Remove Announcement</button>
+    <button id="announcement-button" class="announcement-buttons">Add Announcement</button>
+    <!-- The Modal -->
+    <div id="announcement-modal" class="modal">
+      <!-- Modal content -->
+      <div class="announcement-modal-content">
+        <span class="close">&times;</span>
+        <p>You can add multiple announcements by separating with a comma</p>
+        <p>
+          <input
+            id="add-announcement"
+            placeholder="Add announcement"
+            type="text"
+          ></input>
+        </p>
+      </div>
+    </div>
+    <br><br>
+    <div id="announcement" class="center" hidden></div>
   </body>
   <script type="text/javascript">
     const defaultOptions = [
@@ -208,10 +281,64 @@
       Object.entries(leaderboard).forEach(([name, value]) => addLeaderboardRow(name, value))
     };
 
+    // Get the modal
+    const modal = document.getElementById("announcement-modal");
+
+    // Get the button that opens the modal
+    const btn = document.getElementById("announcement-button");
+
+    // Get the <span> element that closes the modal
+    const span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    document.getElementById("remove-announcement-button").onclick = function() {
+      document.getElementById("announcement").setAttribute("hidden", true);
+      removeAnnouncement();
+    }
+
+    const getAnnouncement = () => window.localStorage.getItem("announcement");
+    const setAnnouncement = (str) => {
+      const announcements = str.split(", ");
+      let announcementString = "";
+      announcements.forEach((announcement) => announcementString += "<p>" + announcement + "</p>");
+      window.localStorage.setItem("announcement", "🚨🚨🚨🚨🚨" + announcementString + "🚨🚨🚨🚨🚨");
+    }
+    const removeAnnouncement = () => window.localStorage.removeItem("announcement");
+    const announcementInput = document.getElementById("add-announcement");
+
+    announcementInput.addEventListener("keypress", (e) => {
+      if (e.key != "Enter") return;
+
+      setAnnouncement(e.target.value);
+      document.getElementById("announcement").innerHTML = getAnnouncement();
+      document.getElementById("announcement").removeAttribute("hidden");
+      modal.style.display = "none";
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
       renderList(defaultOptions);
       checkLeaderboard();
       renderLeaderboard();
+      if (getAnnouncement() !== null) {
+        document.getElementById("announcement").removeAttribute("hidden");
+        document.getElementById("announcement").innerHTML = getAnnouncement();
+      }
     });
   </script>
 
