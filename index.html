@@ -277,8 +277,9 @@
       const table = document.getElementById("leaderboard")
       table.innerHTML = "" // drop all table rows to prevent duplicate rendering
 
-      // then re-render the whole thing
-      Object.entries(leaderboard).forEach(([name, value]) => addLeaderboardRow(name, value))
+      const sortable = Object.entries(leaderboard);
+      sortable.sort((a, b) => b[1] - a[1]);
+      sortable.forEach(([name, value]) => addLeaderboardRow(name, value));
     };
 
     // Get the modal
