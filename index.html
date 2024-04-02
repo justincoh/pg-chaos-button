@@ -165,7 +165,7 @@
       "beth",
       "dakota",
       "dan",
-      "jeff",
+      "donatas",
       "justin",
       "kobie",
     ];
@@ -183,11 +183,8 @@
     };
 
     const chooseSomeone = () => {
-      //const options = getOptions();
-      const options = ["jeff", "ben"];
-      //const idx = Math.floor(Math.random() * options.length)
-      //const person = options[idx];
-      const idx = Math.floor(Math.random() * 2)
+      const options = getOptions();
+      const idx = Math.floor(Math.random() * options.length)
       const person = options[idx];
       const resultElement = document.getElementById("result");
       resultElement.innerHTML = person;
